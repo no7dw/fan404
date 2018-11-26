@@ -4,10 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"net/http"
-	"fmt"
 )
 
-var db = make(map[string]string)
 var redisClient = initRedis()
 
 func initRedis() *redis.Client {
@@ -20,22 +18,13 @@ func initRedis() *redis.Client {
 }
 
 func setupRouter() *gin.Engine {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
 	r := gin.Default()
-
-	// Ping test
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
 
 	// Get user value
 	r.GET("/user/:name", func(c *gin.Context) {
 		user := c.Params.ByName("name")
-		// value, ok := db[user]
 		value , err := redisClient.Get(user).Result()
-		fmt.Println(user, value, err)
-		if value != "" {
+		if value != "" && err == nil {
 			c.JSON(http.StatusOK, gin.H{"user": user, "value": value})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"user": user, "status": "no value"})
@@ -55,7 +44,6 @@ func setupRouter() *gin.Engine {
 		}
 
 		if c.Bind(&json) == nil {
-			db[user] = json.Value
 			err := redisClient.Set(user, json.Value, 0).Err()
 			if err != nil {
 				panic(err)
