@@ -19,12 +19,6 @@ func initRedis() *redis.Client {
 	return r		
 }
 
-// var redisClient = redis.NewClient(
-// 		&redis.Options{
-// 			Addr: "localhost:6379",
-// 			Password: "",
-// 			DB: 0,})
-
 func setupRouter() *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
