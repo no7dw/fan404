@@ -1,21 +1,13 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis"
+	// "github.com/go-redis/redis"
+	"github.com/gin-gonic/gin"	
+	"github.com/no7dw/fan404/db"
+
 	"net/http"
 )
-
-var redisClient = initRedis()
-
-func initRedis() *redis.Client {
-	r := redis.NewClient(
-		&redis.Options{
-			Addr: "localhost:6379",
-			Password: "",
-			DB: 0,})
-	return r		
-}
+var redisClient = db.InitRedis()
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
